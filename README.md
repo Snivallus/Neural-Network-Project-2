@@ -25,9 +25,9 @@ pip install -r requirements.txt # 安装依赖
 |-- different_loss.ipynb # 比较不同 L2 正则项系数效果的 notebook
 |-- different_optimizer.ipynb # 比较不同优化器效果的 notebook
 |-- different_structure.ipynb # 比较不同模型架构 (参数量) 的 notebook
-|-- figures	# 第一个任务相关的图片
+|-- figures # 第一个任务相关的图片
 |   |-- accuracy_different_activation.pdf # 不同激活函数的效果
-|   |-- accuracy_different_loss.pdf	# 不同 L2 正则项系数的效果
+|   |-- accuracy_different_loss.pdf # 不同 L2 正则项系数的效果
 |   |-- accuracy_different_optimizer.pdf # 不同优化器效果
 |   |-- accuracy_different_structure.pdf # 不同模型架构效果
 |   |-- filter_visualization.pdf # 卷积核权重的可视化
