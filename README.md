@@ -11,7 +11,7 @@ pip install -r requirements.txt # 安装依赖
 **项目结构:**
 
 ```bash
-|-- 21307140051_雍崔扬_PJ2.pdf		  # 实验报告
+|-- 21307140051_雍崔扬_PJ2.pdf		# 实验报告
 |-- Latex 							# 实验报告的 Latex 源码
 |-- README.md						# README 文件
 |-- VGG_Loss_Landscape.py			# 用于绘制 VGG-A 和 VGG-A-BN 损失景观对比图
