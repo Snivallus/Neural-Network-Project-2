@@ -436,6 +436,7 @@ class EarlyStopping:
         self.min_delta = min_delta
         # best_acc 保存目前为止观察到的最高验证准确率
         self.best_acc = float('-inf')
+        self.best_epoch = 0
         # wait 记录经过多少个 epoch 验证损失没有显著改善
         self.wait = 0
         # stopped_epoch 记录提前停止触发时的 epoch 编号
@@ -445,13 +446,14 @@ class EarlyStopping:
         # early_stop 标记是否已经触发提前停止
         self.early_stop = False
 
-    def __call__(self, test_acc, test_loss, epoch, patience):
+    def __call__(self, test_acc, test_loss, epoch):
         # 比较当前准确率和历史最小准确率, 看是否有至少 min_delta 的上升
         # print(test_acc - self.best_acc) # debug
         if test_acc - self.best_acc > self.min_delta:
             # 1. 验证准确率显著下降
             self.best_acc = test_acc   # 更新最优验证准确率
             self.best_loss = test_loss # 更新最优验证损失
+            self.best_epoch = epoch
             self.wait = 0              # 重置等待计数
             self.best_acc_changed = True
         else:
@@ -464,7 +466,7 @@ class EarlyStopping:
                 self.stopped_epoch = epoch
                 print(
                     f"Early stopping triggered after epoch {self.stopped_epoch}\n"
-                    + f"Best accuracy {self.best_acc} occurred at epoch {self.stopped_epoch - patience}"
+                    + f"Best accuracy {self.best_acc} occurred at epoch {self.best_epoch}"
                 )
 
 # 告诉PyTorch在执行evaluate函数时不需要计算梯度
@@ -631,7 +633,7 @@ def fit_with_warmup_adam(
         # ------------------------------
         # 4.4 EarlyStopping 逻辑: 
         # 如果测试准确率连续多次没有显著下降, 就提前停止
-        early_stopping(result['test_acc'], result['test_loss'], epoch, patience)
+        early_stopping(result['test_acc'], result['test_loss'], epoch)
         # 如果当前 epoch 使得 best_acc 更新了, 就保存最优模型
         if early_stopping.best_acc_changed:
             torch.save({
@@ -648,6 +650,12 @@ def fit_with_warmup_adam(
         # ------------------------------
         # 将本 epoch 结果追加到 history，方便后续可视化或分析
         history.append(result)
+
+        # 如果训练周期达到上限, 则输出最高准确率
+        if epoch == epochs:
+            print(f"Training completed after {epochs} epochs.")
+            print(f"Max test accuracy: {early_stopping.best_acc:.4f} at epoch {early_stopping.best_epoch}")
+            break
 
         # 如果触发了提前停止, 则结束训练
         if early_stopping.early_stop:
@@ -780,7 +788,7 @@ def fit_with_warmup_SGD(
 
         # ------------------------------
         # EarlyStopping 逻辑:
-        early_stopping(result['test_acc'], result['test_loss'], epoch, patience)
+        early_stopping(result['test_acc'], result['test_loss'], epoch)
         # 如果当前 epoch 使得 best_acc 更新了, 保存最优模型
         if early_stopping.best_acc_changed:
             torch.save({
@@ -795,6 +803,12 @@ def fit_with_warmup_SGD(
         # ------------------------------
         # 将本 epoch 结果追加到 history，方便后续可视化或分析
         history.append(result)
+
+        # 如果训练周期达到上限, 则输出最高准确率
+        if epoch == epochs:
+            print(f"Training completed after {epochs} epochs.")
+            print(f"Max test accuracy: {early_stopping.best_acc:.4f} at epoch {early_stopping.best_epoch}")
+            break
 
         # 如果触发了提前停止，则结束训练
         if early_stopping.early_stop:
@@ -896,7 +910,7 @@ def visualize_filters(model, layer_name='stem.0', num_filters=16, save_path='./f
     n_filters = min(num_filters, out_channels)
     
     # Set up the 4 x 4 grid
-    n_rows, n_cols = 4, 4
+    n_rows, n_cols = 4, num_filters // 4
     fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 1.5, n_rows * 1.5))
     axes = axes.flatten()
 

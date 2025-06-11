@@ -27,7 +27,7 @@ Cuiyang Yong\\
 % \linenumbers
 
 \begin{abstract}
-This report presents an image classification study on the CIFAR-10 dataset using a hierarchical convolutional neural network (CNN) architecture comprising 0.77 million parameters and achieves a test accuracy of 92\%, and explores the effectiveness of Batch Normalization (BN) on VCG-A model.\footnote{https://github.com/Snivallus/Neural-Network-Project-2}
+This report presents an image classification study on the CIFAR-10 dataset using a hierarchical convolutional neural network (CNN) architecture comprising 0.72 million parameters and achieves a test accuracy of 92.51\%, and explores the effectiveness of Batch Normalization (BN) on VCG-A model.\footnote{https://github.com/Snivallus/Neural-Network-Project-2}
 \end{abstract}
 
 %=======================================================================
@@ -59,12 +59,12 @@ By leveraging PyTorch’s \textbf{torchvision} library, this report applies data
 
 The \textbf{Basic Block} is a modular convolutional unit designed for flexible feature extraction and channel attention. Internally, it stacks multiple convolutional layers, each composed of a 2D convolution, batch normalization, and an activation function, followed by an optional residual downsample branch if required. The output of the convolutional sequence is added to the appropriate identity pathway—either the original input or a downsampled version—forming a standard residual connection, after which a Squeeze-and-Excitation (SE) module is applied to boost representational power.
 
-The overall architecture begins with a "stem" convolution that maps the three-channel CIFAR-10 input to $16$ feature channels. Concretely, the stem consists of a $3\times 3$ convolution, followed by BatchNorm and the chosen activation function (ReLU, Sigmoid, or Tanh). The subsequent feature extractor is divided into three stages, each comprised of $8$ instances of the basic block.
+The overall architecture begins with a "stem" convolution that maps the three-channel CIFAR-10 input to $24$ feature channels. Concretely, the stem consists of a $5\times 5$ convolution, followed by BatchNorm and the chosen activation function (ReLU, Sigmoid, or Tanh). The subsequent feature extractor is divided into three stages, each comprised of $7$ instances of the basic block.
 
 \begin{itemize}
-    \item Stage $1$ retains a constant channel width of $16$ throughout, without any downsampling.
+    \item Stage $1$ retains a constant channel width of $24$ throughout, without any downsampling.
 
-    \item Stage $2$ increases the channel width from $16$ to $32$, with downsampling in the first block.
+    \item Stage $2$ increases the channel width from $24$ to $32$, with downsampling in the first block.
 
     \item Stage $3$ raises the channel width from $32$ to $64$, with downsampling in the first block.
 \end{itemize}
@@ -102,7 +102,7 @@ The proposed model was trained using a subset of 10,000 samples from the CIFAR-1
     \midrule
     \textbf{Data Augmentation} &\\
     Random Crop & padding=4, padding\_mode= reflect \\
-    Color Jitter & brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1 \\
+    Color Jitter & brightness=0.3, contrast=0.3, saturation=0.3, hue=0.15 \\
     Normalization & mean=(0.4914, 0.4822, 0.4465), std=(0.2470, 0.2435, 0.2616)\\
     \midrule
     \textbf{Loss Function} & Cross-Entropy \\
@@ -113,31 +113,31 @@ The proposed model was trained using a subset of 10,000 samples from the CIFAR-1
     Dropout Rate & 50\%\\
     \midrule
     \textbf{Optimizer} & Adam \\
-    Max Learning Rate & 0.001\\
-    Weight Decay & 0.0001\\
-    Gradient Clip & 1\\
+    Max Learning Rate & 0.0006\\
+    Weight Decay & 0.0002\\
+    Gradient Clip & 1.0\\
     \midrule
     \textbf{Early Stopping} &\\
-    Patience & 10 \\
+    Patience & 20 \\
     Min Delta & 0.001\\
     \midrule
     \textbf{Model Metrics}\\
-    Params (M) & 0.77\\
-    Params Size (MB) & 0.01\\
-    Forward/Backward Pass Size (MB) & 12.84\\
-    Total Size (MB) & 2.95\\
-    GFLOPs & 0.11\\
+    Params (M) & 0.72\\
+    Params Size (MB) & 2.75\\
+    Forward/Backward Pass Size (MB) & 14.55\\
+    Total Size (MB) & 17.31\\
+    GFLOPs & 0.143\\
     \bottomrule
   \end{tabular}
 \end{table}
 
- Under this training regime, the model achieved a classification accuracy of 92.06\% on the test set. The full hyperparameter configuration and resource metrics are summarized in Table \ref{tab:model_setting}.
+ Under this training regime, the model achieved a classification accuracy of 92.51\% on the test set. The full hyperparameter configuration and resource metrics are summarized in Table \ref{tab:model_setting}.
 
-We selected the $16$ filters of the first convolutional layer and arranged them in a $4\times 4$ grid for compact representation. To ensure interpretability, each filter was normalized independently to the $[0, 1]$ range and mapped to grayscale intensities. It is observed that many filters exhibit localized edge-detecting behavior, with strong horizontal, vertical, or diagonal orientations. Others capture color contrast patterns or blob-like structures that are indicative of primitive shape detection.
+We selected the $24$ filters of the first convolutional layer and arranged them in a $4\times 6$ grid for compact representation. To ensure interpretability, each filter was normalized independently to the $[0, 1]$ range and mapped to grayscale intensities. It is observed that many filters exhibit localized edge-detecting behavior, with strong horizontal, vertical, or diagonal orientations. Others capture color contrast patterns or blob-like structures that are indicative of primitive shape detection.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.6\linewidth]{figures/filter_visualization.pdf}
+  \includegraphics[width=0.8\linewidth]{figures/filter_visualization.pdf}
   \caption{Visualization of the first-layer convolutional filters (grayscale).}
   \label{fig:first_layer_filters}
 \end{figure}
