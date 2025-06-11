@@ -15,7 +15,9 @@ pip install -r requirements.txt # 安装依赖
 |-- Latex # 实验报告的 Latex 源码
 |-- README.md # README 文件
 |-- VGG_Loss_Landscape.py # 用于绘制 VGG-A 和 VGG-A-BN 损失景观对比图
-|-- cnn_models.ipynb # 最基本的训练模型的 notebook, 其中 model_1 达到了 92.06% 的准确率
+|-- cnn_models_v0.ipynb # 最基本的训练模型的 notebook, 其中 model_1 达到了 92.06% 的准确率
+|-- cnn_models_v1.ipynb
+|-- cnn_models_v2.ipynb
 |-- data
 |   |-- __init__.py
 |   |-- cifar-10-batches-py
@@ -39,7 +41,13 @@ pip install -r requirements.txt # 安装依赖
 |   `-- vgg.py # 定义 VCG-A 和 VCG-A-BN
 |-- requirements.txt # 记录了项目依赖
 |-- saved_weights # 第一个任务中保存的模型权重
-|   |-- best_results # `cnn_models.ipynb` 保存的 model 0,1 的权重
+|   |-- best_results_0 # `cnn_models_v0.ipynb` 保存的 model 0,1 的权重
+|   |   -- best_model_0.pth
+|   |   `-- best_model_1.pth
+|   |-- best_results_2 # `cnn_models_v1.ipynb` 保存的 model 0,1 的权重
+|   |   -- best_model_0.pth
+|   |   `-- best_model_1.pth
+|   |-- best_results_2 # `cnn_models_v2.ipynb` 保存的 model 0,1 的权重
 |   |   -- best_model_0.pth
 |   |   `-- best_model_1.pth
 |   |-- different_activation # `different_activation.ipynb` 保存的 model 0,1,2 的权重
@@ -88,7 +96,7 @@ pip install -r requirements.txt # 安装依赖
 
 - 本项目使用单张 $\text{NVIDIA RTX A6000}$ 显卡
 
-- 对于第一个任务 (在 $\text{CIFAR-10}$ 上训练一个分类模型)，只需运行对应的五个 notebook 文件即可.
+- 对于第一个任务 (在 $\text{CIFAR-10}$ 上训练一个分类模型), 只需运行对应的七个 notebook 文件即可.
 
 - 对于第二个任务 (研究 Batch Normalization 的作用)，`VCG_Loss_Landscape.py` 的用法如下:
 
