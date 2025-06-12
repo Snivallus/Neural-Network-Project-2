@@ -51,7 +51,8 @@ pip install -r requirements.txt # 安装依赖
 |   |-- best_results_3 # `cnn_models_v3.ipynb` 保存的 model 1 的权重
 |   |   `-- best_model_1.pth
 |   |-- best_results_4 # `cnn_models_v4.ipynb` 保存的 model 1 的权重
-|   |   `-- best_model_1.pth
+|   |   -- best_model_1.pth
+|   |   `-- best_model_1_next.pth
 |   |-- different_activation # `different_activation.ipynb` 保存的 model 0,1,2 的权重
 |   |   |-- best_model_0.pth
 |   |   |-- best_model_0_next.pth
